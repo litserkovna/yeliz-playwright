@@ -5,17 +5,17 @@ test.describe("Registration Form Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("");
     console.log('Page URL:', page.url());
-    const SignUpButton = page.locator('.hero-descriptor_btn.btn.btn-primary');
-    await SignUpButton.click();
+    const signUpButton = page.locator('.hero-descriptor_btn.btn.btn-primary');
+    await signUpButton.click();
   })
 
   test.describe('Positive Scenario', () => { 
     test.afterEach('Removing created user', async ({ page }) => {
-      const SettingsButton = page.locator('a.btn.btn-white.btn-sidebar.sidebar_btn:has-text("Settings")');
-      await SettingsButton.click();
+      const settingsButton = page.locator('a.btn.btn-white.btn-sidebar.sidebar_btn:has-text("Settings")');
+      await settingsButton.click();
       await expect(page).toHaveURL("/panel/settings");
-      await page.click('button.btn.btn-danger-bg:has-text("Remove my account")');
-      await page.click('button.btn.btn-danger:has-text("Remove")');
+      await page.locator('button.btn.btn-danger-bg', { hasText: 'Remove my account' }).click();
+      await page.locator('button.btn.btn-danger', { hasText: 'Remove' }).click();
 
       await expect(page).toHaveURL('/');
     });
@@ -41,7 +41,7 @@ test.describe("Registration Form Tests", () => {
 //Name Field
   test('Name Field Validation - Empty Field', async ({ page }) => {
     const nameInput = page.locator('input[name="name"]');
-    const nameErrorMessage = page.locator('div.invalid-feedback >> p');
+    const nameErrorMessage = nameInput.locator('+div.invalid-feedback >> p');
 
     await nameInput.fill('');
     await nameInput.focus();
@@ -53,7 +53,7 @@ test.describe("Registration Form Tests", () => {
 
   test('Name Field Validation - Wrong Data', async ({ page }) => {
     const nameInput = page.locator('input[name="name"]');
-    const nameErrorMessage = page.locator('div.invalid-feedback >> p');
+    const nameErrorMessage = nameInput.locator('+div.invalid-feedback >> p');
 
     
     await nameInput.pressSequentially('123',{ delay: 100 });
@@ -66,7 +66,7 @@ test.describe("Registration Form Tests", () => {
 
   test('Name Field Validation - Wrong Length', async ({ page }) => {
     const nameInput = page.locator('input[name="name"]');
-    const nameErrorMessage = page.locator('div.invalid-feedback >> p');
+    const nameErrorMessage = nameInput.locator('+div.invalid-feedback >> p');
 
     await nameInput.pressSequentially('A',{ delay: 100 });
     await nameInput.focus();
@@ -79,7 +79,7 @@ test.describe("Registration Form Tests", () => {
 //Last Name Field
 test('Empty Last Name field validation', async ({ page }) => {
   const lastNameInput = page.locator('input[name="lastName"]');
-  const lastNameErrorMessage = page.locator('div.invalid-feedback p');
+  const lastNameErrorMessage = lastNameInput.locator('+div.invalid-feedback p');
   await lastNameInput.fill('');
   await lastNameInput.focus();
   await lastNameInput.blur();
@@ -89,7 +89,7 @@ test('Empty Last Name field validation', async ({ page }) => {
 
 test('Invalid Last Name data - Wrong length', async ({ page }) => {
   const lastNameInput = page.locator('input[name="lastName"]');
-  const lastNameErrorMessage = page.locator('div.invalid-feedback p');
+  const lastNameErrorMessage = lastNameInput.locator('+div.invalid-feedback p');
   await lastNameInput.fill('a');
   await lastNameInput.focus();
   await lastNameInput.blur();
@@ -99,7 +99,7 @@ test('Invalid Last Name data - Wrong length', async ({ page }) => {
 
 test('Invalid Last Name data - Wrong characters', async ({ page }) => {
   const lastNameInput = page.locator('input[name="lastName"]');
-  const lastNameErrorMessage = page.locator('div.invalid-feedback p');
+  const lastNameErrorMessage = lastNameInput.locator('+div.invalid-feedback p');
   await lastNameInput.fill('123');
   await lastNameInput.focus();
   await lastNameInput.blur();
@@ -108,7 +108,7 @@ test('Invalid Last Name data - Wrong characters', async ({ page }) => {
 
 test('Invalid Last Name data - Exceeds maximum length', async ({ page }) => {
   const lastNameInput = page.locator('input[name="lastName"]');
-  const lastNameErrorMessage = page.locator('div.invalid-feedback p');
+  const lastNameErrorMessage = lastNameInput.locator('+div.invalid-feedback p');
   await lastNameInput.fill('A'.repeat(25)); 
   await lastNameInput.focus();
   await lastNameInput.blur();
@@ -118,7 +118,7 @@ test('Invalid Last Name data - Exceeds maximum length', async ({ page }) => {
 //Email Field
 test('Empty Email field validation', async ({ page }) => {
   const emailInput = page.locator('input[name="email"]');
-  const emailInputErrorMessage = page.locator('div.invalid-feedback p');
+  const emailInputErrorMessage = emailInput.locator('+div.invalid-feedback p');
   await emailInput.fill('');
   await emailInput.focus();
   await emailInput.blur();
@@ -127,7 +127,7 @@ test('Empty Email field validation', async ({ page }) => {
 
 test('Invalid Email data - Incorrect format', async ({ page }) => {
   const emailInput = page.locator('input[name="email"]');
-  const emailInputErrorMessage = page.locator('div.invalid-feedback p');
+  const emailInputErrorMessage = emailInput.locator('+div.invalid-feedback p');
   await emailInput.fill('test.email');
   await emailInput.focus();
   await emailInput.blur();
@@ -136,7 +136,7 @@ test('Invalid Email data - Incorrect format', async ({ page }) => {
 //Password Field
  test('Empty Password field validation', async ({ page }) => {
   const passwordInput = page.locator('input[name="password"]');
-  const passwordError = page.locator('div.invalid-feedback p');
+  const passwordError = passwordInput.locator('+ div.invalid-feedback p');  
   await passwordInput.fill('');
   await passwordInput.focus();
   await passwordInput.blur();
@@ -145,15 +145,18 @@ test('Invalid Email data - Incorrect format', async ({ page }) => {
 
   test('Invalid Password data - Incorrect format', async ({ page }) => {
     const passwordInput = page.locator('input[name="password"]');
-    const passwordError = page.locator('div.invalid-feedback p');
+    const passwordError = passwordInput.locator('+div.invalid-feedback p');
     await passwordInput.fill('test.email',{ timeout: 2000 });
     await passwordInput.focus();
     await passwordInput.blur();
-    await expect(passwordError).toHaveText('Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter');  });
+    await expect(passwordError).toHaveText('Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter');  
+    await expect(passwordError).toHaveCSS('border-color', 'rgb(220, 53, 69)')
+  });
+    
 
   test('Invalid Password data - Too short', async ({ page }) => {
     const passwordInput = page.locator('input[name="password"]');
-    const passwordError = page.locator('div.invalid-feedback p');
+    const passwordError = passwordInput.locator('+div.invalid-feedback p');
     await passwordInput.fill('Aa', {timeout: 2000});
     await passwordInput.focus();
     await passwordInput.blur();
@@ -161,7 +164,7 @@ test('Invalid Email data - Incorrect format', async ({ page }) => {
 
 test('Invalid Password data - Too long', async ({ page }) => {
   const passwordInput = page.locator('input[name="password"]');
-  const passwordError = page.locator('div.invalid-feedback p');
+  const passwordError = passwordInput.locator('+div.invalid-feedback p');
   await passwordInput.fill('A'.repeat(20));
   await passwordInput.focus();
   await passwordInput.blur();
@@ -170,7 +173,7 @@ test('Invalid Password data - Too long', async ({ page }) => {
 
 test('Invalid Password data - No capital letter', async ({ page }) => {
   const passwordInput = page.locator('input[name="password"]');
-  const passwordError = page.locator('div.invalid-feedback p');
+  const passwordError = passwordInput.locator('+div.invalid-feedback p');
   await passwordInput.fill('a'.repeat(6));
   await passwordInput.focus();
   await passwordInput.blur();
@@ -179,7 +182,7 @@ test('Invalid Password data - No capital letter', async ({ page }) => {
 
 test('Invalid Password data - No small letter', async ({ page }) => {
   const passwordInput = page.locator('input[name="password"]');
-  const passwordError = page.locator('div.invalid-feedback p');
+  const passwordError = passwordInput.locator('+div.invalid-feedback p');
   await passwordInput.fill('A1'.repeat(6));
   await passwordInput.focus();
   await passwordInput.blur();
@@ -188,7 +191,7 @@ test('Invalid Password data - No small letter', async ({ page }) => {
 
 test('Empty Re-enter Password field validation', async ({ page }) => {
   const repeatPasswordInput = page.locator('input[name="repeatPassword"]');
-  const secondPasswordError = page.locator('div.invalid-feedback p');
+  const secondPasswordError = repeatPasswordInput.locator('+div.invalid-feedback p');
   await repeatPasswordInput.fill('');
   await repeatPasswordInput.focus();
   await repeatPasswordInput.blur();
@@ -197,8 +200,9 @@ test('Empty Re-enter Password field validation', async ({ page }) => {
 
 test('Invalid Re-enter Password data - Passwords do not match', async ({ page }) => {
   const repeatPasswordInput = page.locator('input[name="repeatPassword"]');
-  const secondPasswordError = page.locator('div.invalid-feedback p');
-  await repeatPasswordInput.fill('passWord1');
+  const secondPasswordError = repeatPasswordInput.locator('+div.invalid-feedback p');
+  const newPassword = 'passWord1';
+  await repeatPasswordInput.fill(newPassword);
   await repeatPasswordInput.focus();
   await repeatPasswordInput.blur();
   await expect(secondPasswordError).toHaveText('Passwords do not match')
