@@ -8,7 +8,7 @@ test.describe("Registration Form Tests", () => {
     test.beforeEach(async ({ page }) => {
         const mainPage = new MainPage(page);
         await mainPage.navigate();
-        component = await mainPage.openRegistrationComponent();
+        component = await mainPage.openRegistrationPopup();
     });
 test.describe("Positive Scenario", () => {
   test.afterEach('Removing created account', async ({ page }) => {

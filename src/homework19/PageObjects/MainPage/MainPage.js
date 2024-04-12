@@ -1,6 +1,8 @@
-import RegistrationComponent from "../Registration/RegistrationComponent.js";
+import RegistrationPopup from "../Registration/RegistrationPopup.js";
+import BasePage from "./BasePage.js";
 
-export default class MainPage {
+
+export default class MainPage extends BasePage {
     constructor(page) {
         this._page = page;
         this._signupButton = page.locator('.hero-descriptor_btn.btn.btn-primary');
@@ -10,8 +12,8 @@ export default class MainPage {
         await this._page.goto("");
     }
     
-    async openRegistrationComponent() {
+    async openRegistrationPopup() {
         await this._signupButton.click();
-        return new RegistrationComponent(this._page);
+        return new RegistrationPopup(this._page);
     }
 }

@@ -1,4 +1,4 @@
-export default class RegistrationComponent {
+export default class RegistrationPopup {
     _nameInputSelector = '#signupName';
     _lastNameInputSelector = '#signupLastName';
     _emailInputSelector = '#signupEmail';
