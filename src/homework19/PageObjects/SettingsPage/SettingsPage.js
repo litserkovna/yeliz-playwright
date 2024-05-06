@@ -1,4 +1,4 @@
-import BasePage from "./BasePage.js";
+import BasePage from "../MainPage/BasePage.js";
 
 export default class SettingsPage extends BasePage{
     constructor(page){
@@ -9,7 +9,7 @@ export default class SettingsPage extends BasePage{
     }
 
     async openSettings(){
-        await this.navigateTo("")
+        await this.navigate("")
         await this._settingsButton.click();
     }
     async removeCreatedAccount(){

@@ -1,0 +1,1 @@
+export const USER_YELIZ_STORAGE_STATE_PATH = './state/yeliz-state.json';
