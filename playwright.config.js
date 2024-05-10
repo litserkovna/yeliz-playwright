@@ -13,7 +13,7 @@ dotenv.config();
  * @see https://playwright.dev/docs/test-configuration
  */
 const config = defineConfig({
-  testDir: './tests',
+  // testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -37,8 +37,14 @@ const config = defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'setup',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /tests\/setup\/.*\/*.setup.js/
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup']
     },
 
     // {
