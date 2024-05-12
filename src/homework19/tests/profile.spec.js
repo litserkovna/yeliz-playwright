@@ -16,6 +16,6 @@ test.describe.only("User Mocks", ()=> {
     await garagePage.navBar.profileButton.click()
     const profilePage = new ProfilePage(page)
     expect(page).toHaveURL(/profile/)
-    expect(profilePage.profileName).toHaveText(`${name} ${lastName}`)
+    await expect(profilePage.profileName).toHaveText(`${name} ${lastName}`)
   })
 })
