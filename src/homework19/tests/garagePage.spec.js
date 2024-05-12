@@ -1,7 +1,7 @@
 import {test} from "../fixtures/userGaragePage.js";
 import { expect } from "@playwright/test";
 
-test.describe.only('Garage (fixtures)', () => {
+test.describe('Garage (fixtures)', () => {
     test('add car', async ({garagePage}) =>{
         const brand = 'BMW'
         const model = 'X5'
